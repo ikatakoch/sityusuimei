@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>四柱推命</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho&display=swap" rel="stylesheet">
+    <style media="screen">
+      body {
+        padding: 0;
+        margin: 0;
+      }
+      * {
+         font-family: "Zen Old Mincho", serif;
+      }
+      .textbox-2-label,
+      .textbox-2 {
+        color: #333;
+      }
+
+      .textbox-2-label {
+          display: block;
+          margin-bottom: 5px;
+          font-size: .9em;
+          color: white;
+      }
+
+      .textbox-2 {
+          width: 50px;
+          padding: 8px 10px;
+          border: 1px solid #d2d2d2;
+          border-radius: 3px;
+          background: #f5e5b0;
+          font-size: 1em;
+          line-height: 1.5;
+      }
+
+      .textbox-2::placeholder {
+          color: #999;
+      }
+      .form span {
+        color: white;
+      }
+      .form {
+        display: flex;
+        width: 500px;
+        height: 300px;
+        justify-content: center;
+        align-items: center;
+        gap: 22px;
+        border-radius: 10px;
+        background-color: #333;
+        opacity: 0.9;
+      }
+      .form-container {
+        display: flex;
+        width: 100vw;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+        gap: 22px;
+        background-image: url(images/back.jpg);
+        background-size: cover;
+        background-position: center;
+        flex-direction: column;
+        color: white;
+      }
+      .button-46 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 80px;
+        height: 80px;
+        padding: 8px;
+        border: none;
+        border-radius: 50%;
+        box-shadow: 0 10px 10px rgb(0 0 0 / 20%);
+        background-image: linear-gradient(0, gold, yellow);
+        color: #333333;
+        font-weight: 600;
+        font-size: 17px;
+        transition: transform .3s, box-shadow .3s;
+    }
+
+    .button-46:hover {
+        transform: scale(.95);
+        box-shadow: 0 5px 5px rgb(0 0 0 / 20%);
+    }
+    .button-46:active {
+        transform: scale(.85);
+        box-shadow: 0 5px 5px rgb(0 0 0 / 20%);
+    }
+
+    .button-46 span {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background-image: linear-gradient(0, gold, yellow);
+        line-height: 64px;
+        color: #222;
+    }
+    #content {
+      display: flex;
+      gap: 22px;
+      transition: all 0.5s;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="form-container">
+    <div class="form">
+      <div id="content">
+    <label>
+      <span class="textbox-2-label">年:</span>
+      <input type="text" class="textbox-2"  id="year" placeholder="2014"/>
+  </label>
+  <label>
+    <span class="textbox-2-label">月:</span>
+    <input type="text" class="textbox-2" id="month" placeholder="1"/>
+</label>
+<label>
+  <span class="textbox-2-label">日:</span>
+  <input type="text" class="textbox-2" id="day" placeholder="1"/>
+</label>
+<label>
+  <span class="textbox-2-label">時:</span>
+  <input type="text" class="textbox-2" id="time" placeholder="16:00"/>
+</label>
+<button class="button-46" onclick="calc()">
+  <span>鑑定</span>
+</button>
+  </div>
+            <img src="images/load.gif" alt="" style="height:50px; display:none; transition: all 0.5s;" id="load">
+        </div>
+    </div>
+    <script type="text/javascript">
+      function calc() {
+        const year = document.getElementById('year').value
+        const month_number = document.getElementById('month').value
+        const day = document.getElementById('day').value
+        const time = document.getElementById('time').value
+        const content = document.getElementById('content')
+        const load = document.getElementById('load')
+        load.style.opacity = '0';
+        let month = null;
+        switch (month_number) {
+          case '1':
+            month = 'January'
+            break;
+          case '2':
+            month = 'February'
+            break;
+          case '3':
+            month = 'March'
+            break;
+          case '4':
+            month = 'April'
+            break;
+          case '5':
+            month = 'May'
+            break;
+          case '6':
+            month = 'June'
+            break;
+          case '7':
+            month = 'July'
+            break;
+          case '8':
+            month = 'August'
+            break;
+          case '9':
+            month = 'September'
+            break;
+          case '10':
+            month = 'October'
+            break;
+          case '11':
+            month = 'November'
+            break;
+          case '12':
+            month = 'December'
+            break;
+        }
+        if (!month) {
+          alert('入力内容に不備があります。もう一度確認してください。(ERR)')
+        }
+        if (!time.includes(":")) {
+          alert('入力内容に不備があります。もう一度確認してください。(ERR)')
+        }
+        const txt = 'From ' + month + day + ',' + year + ',' + time + ', Four Pillars analysis: Output only JSON (Japanese) for personality, talent, job, marriage luck, and wealth.'
+        console.log(txt);
+        sendData()
+        content.style.opacity = '0';
+        load.style.display = 'block';
+        setTimeout(function() {
+          content.style.display = 'none';
+          load.style.opacity = '1';
+        },500)
+        function sendData() {
+  fetch("api/ai", {
+    method: "POST", // 送信メソッドを指定
+    headers: {
+      "Content-Type": "application/json" // 送信データがJSONであることを伝える
+    },
+    body: JSON.stringify({ message: txt }) // オブジェクトを文字列に変換
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTPエラー! ステータス: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("成功:", data);
+      console.log("レスポンス", data.geminiResponse);
+    })
+    .catch((error) => {
+      console.error("エラー:", error);
+      alert('ネットワーク上のエラーが発生いたしました。時間を開けて試してください。\nもんだいがでたよ！すこしやすんでから、もういっかいやってみてね！')
+      //window.location.reload();
+    });
+}
+
+
+        /*
+        const date = new Date();
+        const now = String(date.getFullYear()) + ', ' + String(date.getMonth() + 1) + ', ' + String(date.getDate());
+        const Juboshi = ['癸','甲','乙','丙','丁','戊','己','庚','辛','壬']
+        const Junishi = ['亥','子','丑','寅','卯','辰','巳','午','未','申','酉','戌']
+        const Juboshi_number = (year - 3) % 10;
+        const Junishi_number = (year - 3) % 12;
+        var date1 = new Date(year, month, day);
+        var date2 = new Date();
+        var termDay = (date2 - date1) / 86400000;
+        const sixtyJiaZi = ['甲子','乙丑','丙寅','丁卯','戊辰','己巳','庚午','辛未','壬申','癸酉','甲戌','乙亥','丙子','丁丑','戊寅','己卯','庚辰','辛巳','壬午','癸未','甲申','乙酉','丙戌','丁亥','戊子','己丑','庚寅','辛卯','壬辰','癸巳','甲午','乙未','丙申','丁酉','戊戌','己亥','庚子','辛丑','壬寅','癸卯','甲辰','乙巳','丙午','丁未','戊申','己酉','庚戌','辛亥','壬子','癸丑','甲寅','乙卯','丙辰','丁巳','戊午','己未','庚申','辛酉','壬戌','癸亥'];
+        const Month_Junishi = ['寅','卯','辰','巳','午','未','申','酉','戌','亥','子','丑']
+        const Month_Juboshi = ['戊','己','庚','辛','壬','癸','甲','乙','丙','丁','戊','乙']
+        var day_first = sixtyJiaZi[Math.trunc(termDay) % 60].substr( 0, 1 );
+        let Eto_number = null
+        switch (time) {
+          case '0':
+            Eto_number = '0'
+            break;
+          case '1':
+            Eto_number = '1'
+            break;
+          case '2':
+            Eto_number = '1'
+            break;
+          case '3':
+            Eto_number = '2'
+            break;
+          case '4':
+            Eto_number = '2'
+            break;
+          case '5':
+            Eto_number = '3'
+            break;
+          case '6':
+            Eto_number = '3'
+            break;
+          case '7':
+            Eto_number = '4'
+            break;
+          case '8':
+            Eto_number = '4'
+            break;
+          case '9':
+            Eto_number = '5'
+            break;
+          case '10':
+            Eto_number = '5'
+            break;
+          case '11':
+            Eto_number = '6'
+            break;
+          case '12':
+            Eto_number = '6'
+            break;
+          case '13':
+            Eto_number = '7'
+            break;
+          case '14':
+            Eto_number = '7'
+            break;
+          case '15':
+            Eto_number = '8'
+            break;
+          case '16':
+            Eto_number = '8'
+            break;
+          case '17':
+            Eto_number = '9'
+            break;
+          case '18':
+            Eto_number = '9'
+            break;
+          case '19':
+            Eto_number = '10'
+            break;
+          case '20':
+            Eto_number = '10'
+            break;
+          case '21':
+            Eto_number = '11'
+            break;
+          case '22':
+            Eto_number = '11'
+            break;
+          case '23':
+            Eto_number = '12'
+            break;
+          case '24':
+            Eto_number = '12'
+            break;
+        }
+        if (!Eto_number) {
+          alert('Error.')
+        }
+        console.log(Eto_number);
+        const time1 = ['甲子','乙丑','丙寅','丁卯','戊辰','己巳','庚午','辛未','壬申','癸酉','甲戌','乙亥','丙子']
+        const time2 = ['丙子','丁丑','戊寅','己卯','庚辰','辛巳','壬午','癸未','甲申','乙酉','丙戌','丁亥','戊子']
+        const time3 = ['戊子','己丑','庚寅','辛卯','壬辰','癸巳','甲午','乙未','丙申','丁酉','戊戌','己亥','庚子']
+        let time_Ju = null
+        switch (day_first) {
+          case '甲':
+            time_Ju = time1[Eto_number]
+            break;
+          case '己':
+            time_Ju = time1[Eto_number]
+            break;
+          case '乙':
+            time_Ju = time2[Eto_number]
+            break;
+          case '庚':
+            time_Ju = time2[Eto_number]
+            break;
+          case '丙':
+            time_Ju = time3[Eto_number]
+            break;
+        }
+        console.log(Juboshi[Juboshi_number] + Junishi[Junishi_number]);
+        console.log(Month_Junishi[month - 1] + Month_Juboshi[month - 1]);
+        console.log(sixtyJiaZi[Math.trunc(termDay) % 60]);
+        console.log(time_Ju);*/
+      }
+    </script>
+  </body>
+</html>
