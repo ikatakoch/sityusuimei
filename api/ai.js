@@ -21,7 +21,7 @@ module.exports = async (req, res) => {
   }
 
   // 2. リクエストボディの取得
-  const { prompt } = req.body.prompt
+  const { prompt } = req.body
 
   if (!prompt) {
     return res.status(400).json({ error: 'Prompt is required.' });
