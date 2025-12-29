@@ -21,8 +21,8 @@ module.exports = async (req, res) => {
   }
 
   // 2. リクエストボディの取得
-  const { prompt } = req.body
-  console.log('受け取ったデータ:', req.body);
+  const { message } = req.body;
+  const prompt = message; // 変数名を prompt に入れ替えて後の処理をそのままにする
 
   if (!prompt) {
     return res.status(400).json({ error: 'Prompt is required.' });
