@@ -7,7 +7,7 @@ const groq = new Groq({
 
 // 使用するモデルを指定
 // Llama 3 70B などが高速で高性能です
-const MODEL_NAME = 'llama3-70b-8192';
+const MODEL_NAME = 'llama-3.3-70b-versatile';
 
 module.exports = async (req, res) => {
   // 1. POSTリクエストの確認
