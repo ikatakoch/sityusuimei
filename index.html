@@ -105,6 +105,45 @@
       gap: 22px;
       transition: all 0.5s;
     }
+    table{
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+}
+
+table tr{
+  border-bottom: solid 1px #eee;
+  cursor: pointer;
+}
+
+table tr:hover{
+  background-color: #d4f0fd;
+}
+
+table th,table td{
+  text-align: center;
+  width: 25%;
+  padding: 15px 0;
+}
+
+table td.icon{
+  background-size: 35px;
+  background-position: left 5px center;
+  background-repeat: no-repeat;
+  padding-left: 30px;
+}
+
+table td.icon.personality{
+  background-image: url(/images/p.png)
+}
+
+table td.icon.talent{
+  background-image: url(/images/t.png)
+}
+
+table td.icon.job{
+  background-image: url(/images/j.png)
+}
     </style>
   </head>
   <body>
@@ -132,6 +171,32 @@
 </button>
   </div>
             <img src="images/load.gif" alt="" style="height:50px; display:none; transition: all 0.5s;" id="load">
+            <table id="result">
+  <tr>
+    <th>お名前</th>
+    <th>特技</th>
+    <th>担当カラー</th>
+    <th>住所</th>
+  </tr>
+  <tr>
+    <td class="icon personality">個性</td>
+    <td>空を飛ぶこと</td>
+    <td>グリーン</td>
+    <td>山</td>
+  </tr>
+  <tr>
+    <td class="icon talent">才能</td>
+    <td>潮を吹くこと</td>
+    <td>ブルー</td>
+    <td>海</td>
+  </tr>
+  <tr>
+    <td class="icon job">適職</td>
+    <td>反復横飛び</td>
+    <td>レッド</td>
+    <td>川</td>
+  </tr>
+</table>
         </div>
     </div>
     <script type="text/javascript">
@@ -198,12 +263,12 @@
           load.style.opacity = '1';
         },500)
         function sendData() {
-  fetch("api/ai", {
+  fetch("/api/ai/", {
     method: "POST", // 送信メソッドを指定
     headers: {
       "Content-Type": "application/json" // 送信データがJSONであることを伝える
     },
-    body: JSON.stringify({ message: txt }) // オブジェクトを文字列に変換
+    body: JSON.stringify({ prompt: txt }) // オブジェクトを文字列に変換
   })
     .then((response) => {
       if (!response.ok) {
@@ -214,6 +279,8 @@
     .then((data) => {
       console.log("成功:", data);
       console.log("レスポンス", data.groqResponse);
+
+      return data.groqResponse;
     })
     .catch((error) => {
       console.error("エラー:", error);
@@ -222,6 +289,9 @@
     });
 }
 
+function result() {
+
+}
 
         /*
         const date = new Date();
