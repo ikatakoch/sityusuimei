@@ -207,7 +207,9 @@ table td.icon.job{
         const time = document.getElementById('time').value
         const content = document.getElementById('content')
         const load = document.getElementById('load')
+        const result_ele = document.getElementById('result')
         load.style.opacity = '0';
+        result_ele.style.display = 'none'
         let month = null;
         switch (month_number) {
           case '1':
@@ -290,7 +292,8 @@ table td.icon.job{
 }
 
 function result() {
-
+  load.style.display = 'none'
+  result_ele.style.display = 'block'
 }
 
         /*
